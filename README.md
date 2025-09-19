@@ -18,4 +18,4 @@ See [LICENSE](LICENSE) to read the full text.
 
 Partneropoly is an original work created solely for non-commercial and educational use.
 
-See [DISCLAIMER](DISPLAIMER.md) for the details.
+See [DISCLAIMER](DISCLAIMER.md) for the details.
