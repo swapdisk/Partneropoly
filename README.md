@@ -2,7 +2,7 @@
 
 ## Overview
 
-Partneropoly is a board game where players learn by negotiating the challenges of partner relationships in business. Do not pass "Go" and do not collect $200. Do have fun avoiding bankruptcy by eliminating toil and inefficiency. Watch you back!
+Partneropoly is a board game where players learn by negotiating the challenges of partner relationships in business. Do not pass "Go" and do not collect $200. Do have fun avoiding bankruptcy by eliminating toil and inefficiency. Watch your back!
 
 ## What's here
 
