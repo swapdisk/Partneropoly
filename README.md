@@ -20,7 +20,7 @@ Once the application is running:
 
 ## Writing your script
 
-The script is a list of steps. Each step is listed using YAML syntax as explained below. Replace the example [`script.yml`](partneropoly/script.yml) with your own script.
+The script is a list of steps. Each step is listed using YAML syntax as explained below. Replace the example [`script.yaml`](partneropoly/script.yaml) with your own script.
 
 ### 1. The basics: text & action
 
