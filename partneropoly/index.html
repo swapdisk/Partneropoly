@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partneropoly Narrative Engine</title>
+    <script src="js-yaml.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; font-family: sans-serif; overflow: hidden; }
+        .app-container { display: flex; height: 100vh; width: 100vw; }
+        
+        /* LEFT PANE */
+        .left-pane { height: 100%; aspect-ratio: 1/1; background-color: #333; border-right: 2px solid #ccc; display: flex; align-items: center; justify-content: center; position: relative; perspective: 1200px; overflow: hidden; }
+        #mainBoard { width: 100%; height: 100%; display: block; background: white; }
+        
+        /* DICE LAYER */
+        #diceLayer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+        .die-wrapper { position: absolute; top: 50%; left: -100px; width: 60px; height: 60px; }
+        .die-skew { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
+        .die { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.5s ease-out; }
+        .face { position: absolute; width: 100%; height: 100%; background: #fff; border: 1px solid #ccc; border-radius: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 4px; box-sizing: border-box; backface-visibility: hidden; }
+        .pip { background-color: #333; border-radius: 50%; margin: 2px; box-shadow: inset 0 3px 5px rgba(0,0,0,0.5); }
+        .face-1 { transform: rotateY(0deg) translateZ(30px); } .face-1 .pip:nth-child(1) { grid-column: 2; grid-row: 2; }
+        .face-2 { transform: rotateY(90deg) translateZ(30px); } .face-2 .pip:nth-child(1) { grid-column: 1; grid-row: 1; } .face-2 .pip:nth-child(2) { grid-column: 3; grid-row: 3; }
+        .face-3 { transform: rotateY(180deg) translateZ(30px); } .face-3 .pip:nth-child(1) { grid-column: 1; grid-row: 1; } .face-3 .pip:nth-child(2) { grid-column: 2; grid-row: 2; } .face-3 .pip:nth-child(3) { grid-column: 3; grid-row: 3; }
+        .face-4 { transform: rotateY(-90deg) translateZ(30px); } .face-4 .pip:nth-child(1) { grid-column: 1; grid-row: 1; } .face-4 .pip:nth-child(2) { grid-column: 3; grid-row: 1; } .face-4 .pip:nth-child(3) { grid-column: 1; grid-row: 3; } .face-4 .pip:nth-child(4) { grid-column: 3; grid-row: 3; }
+        .face-5 { transform: rotateX(90deg) translateZ(30px); } .face-5 .pip:nth-child(1) { grid-column: 1; grid-row: 1; } .face-5 .pip:nth-child(2) { grid-column: 3; grid-row: 1; } .face-5 .pip:nth-child(3) { grid-column: 2; grid-row: 2; } .face-5 .pip:nth-child(4) { grid-column: 1; grid-row: 3; } .face-5 .pip:nth-child(5) { grid-column: 3; grid-row: 3; }
+        .face-6 { transform: rotateX(-90deg) translateZ(30px); } .face-6 .pip:nth-child(1) { grid-column: 1; grid-row: 1; } .face-6 .pip:nth-child(2) { grid-column: 3; grid-row: 1; } .face-6 .pip:nth-child(3) { grid-column: 1; grid-row: 2; } .face-6 .pip:nth-child(4) { grid-column: 3; grid-row: 2; } .face-6 .pip:nth-child(5) { grid-column: 1; grid-row: 3; } .face-6 .pip:nth-child(6) { grid-column: 3; grid-row: 3; }
+        @keyframes rollAcross { 0% { left: -100px; transform: scale(0.8); } 100% { left: var(--end-x); transform: scale(1); } }
+        @keyframes bounce { 0%, 100% { top: var(--end-y); } 50% { top: calc(var(--end-y) - 100px); } }
+
+        /* CARD OVERLAY */
+        #cardOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+        #cardOverlay.active { opacity: 1; pointer-events: all; }
+        .card-content { width: 90%; height: 90%; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6)); transform: scale(0.9); transition: transform 0.5s ease; }
+        #cardOverlay.active .card-content { transform: scale(1); }
+        .card-content svg { width: 100%; height: 100%; }
+
+        /* RIGHT PANE */
+        .right-pane { flex: 1; background-color: #fdfdfd; border-left: 1px solid #ddd; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        #contextLayer { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+        #contextLayer svg { width: 95%; height: 95%; max-width: 100%; max-height: 100%; }
+        .script-display { position: absolute; bottom: 20px; left: 20px; right: 20px; background: rgba(255, 255, 255, 0.95); border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 50; min-height: 80px; }
+        .script-text { font-size: 1.2em; color: #222; margin-bottom: 5px; }
+        .script-note { font-size: 0.9em; color: #666; font-style: italic; display: flex; justify-content: space-between;}
+        .controls-hint { margin-top: 20px; padding: 15px; background-color: #f0f0f0; color: #555; text-align: center; border-radius: 5px; border: 1px dashed #ccc; font-size: 0.9em; display: none; /* Hidden by default now */ }
+        .game-piece-group { transition: transform 1.0s cubic-bezier(0.25, 0.1, 0.25, 1); }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="left-pane" id="boardContainer">
+            <svg viewBox="0 0 240 240" id="mainBoard">
+                <g id="boardArtworkLayer"></g>
+                <g id="visualsLayer"></g> 
+                <g id="p1" class="game-piece-group"></g>
+                <g id="p2" class="game-piece-group"></g>
+                <g id="p3" class="game-piece-group"></g>
+                <g id="p4" class="game-piece-group"></g>
+            </svg>
+            <div id="diceLayer"></div>
+        </div>
+
+        <div class="right-pane">
+            <div id="contextLayer">
+                <p style="color:#ccc; font-style:italic;">(Waiting for context...)</p>
+            </div>
+            <div class="script-display">
+                <div id="storyText" class="script-text">Loading Script...</div>
+                <div class="script-note">
+                    <span id="actionNote">Please wait</span>
+                    <span class="step-count">Step <span id="stepCounter">0</span>/<span id="totalSteps">0</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cardOverlay">
+        <div class="card-content" id="cardContainer"></div>
+    </div>
+
+    <script>
+        const BOARD_SIZE = 240; const CORNER_SIZE = 30; const RECT_WIDTH = 20; const RECT_HEIGHT = 30; const TOTAL_SPACES = 40;
+        const spaceCoordinates = [];
+        const PLAYER_OFFSETS = { 1:{x:3,y:3}, 2:{x:-3,y:3}, 3:{x:-3,y:-3}, 4:{x:3,y:-3} };
+
+        function calculateCoordinates() {
+            for (let i = 0; i < TOTAL_SPACES; i++) {
+                let x, y, w, h;
+                if (i <= 10) { y = BOARD_SIZE - CORNER_SIZE; x = i===0?BOARD_SIZE-CORNER_SIZE : (i===10?0 : (BOARD_SIZE-CORNER_SIZE)-(i*RECT_WIDTH)); w=h=(i===0||i===10?CORNER_SIZE:RECT_WIDTH); if(i!==0&&i!==10){h=RECT_HEIGHT;w=RECT_WIDTH;} }
+                else if (i <= 20) { x=0; y = i===20?0 : (BOARD_SIZE-CORNER_SIZE)-((i-10)*RECT_WIDTH); w=h=(i===20?CORNER_SIZE:RECT_WIDTH); if(i!==20){w=RECT_HEIGHT;h=RECT_WIDTH;} }
+                else if (i <= 30) { y=0; x = i===30?BOARD_SIZE-CORNER_SIZE : CORNER_SIZE+((i-21)*RECT_WIDTH); w=h=(i===30?CORNER_SIZE:RECT_WIDTH); if(i!==30){h=RECT_HEIGHT;w=RECT_WIDTH;} }
+                else { x=BOARD_SIZE-CORNER_SIZE; y = CORNER_SIZE+((i-31)*RECT_WIDTH); w=RECT_HEIGHT; h=RECT_WIDTH; }
+                spaceCoordinates.push({ x: x+(w/2)-10, y: y+(h/2)-10 });
+            }
+        }
+
+        const boardLayer = document.getElementById('boardArtworkLayer');
+        
+        // --- NEW: SCRIPT LOADING LOGIC ---
+        let script = []; // Empty initially
+
+        async function loadScript() {
+            try {
+                // 1. Fetch the YAML file
+                const response = await fetch('script.yaml');
+                if (!response.ok) throw new Error("Could not find script.yaml");
+                
+                const yamlText = await response.text();
+                
+                // 2. Parse using jsyaml library
+                script = jsyaml.load(yamlText);
+                
+                console.log("Script loaded steps:", script.length);
+            } catch (error) {
+                console.error(error);
+                document.getElementById('storyText').textContent = "Error loading script.yaml";
+                document.getElementById('actionNote').textContent = "Ensure script.yaml exists and valid";
+            }
+        }
+
+        async function initApp() {
+            calculateCoordinates();
+            await loadSVG('board.svg', boardLayer);
+            for(let i=1; i<=4; i++) await initPlayerPiece(i);
+            
+            // Wait for script to load
+            await loadScript();
+
+            if (script.length > 0) {
+                document.getElementById('totalSteps').textContent = script.length;
+                // Initialize UI with the first step (index -1 -> next will be 0)
+                currentStepIndex = -1;
+                // We advance automatically to step 0 to show the first state? 
+                // Or wait for user input. Let's wait for input but show "Ready".
+                document.getElementById('storyText').textContent = "Ready to start.";
+                document.getElementById('actionNote').textContent = "Press Space Bar";
+            }
+        }
+
+        async function loadSVG(f,t) { try{const r=await fetch(f);if(r.ok){const p=new DOMParser();const d=p.parseFromString(await r.text(),"image/svg+xml");while(d.documentElement.firstChild)t.appendChild(d.documentElement.firstChild);}}catch(e){} }
+        async function initPlayerPiece(n) {
+            const c=document.getElementById('p'+n);
+            try{const r=await fetch(`player${n}.svg`);if(!r.ok)throw new Error();c.innerHTML=await r.text();
+            const s=c.querySelector('svg');if(s){s.setAttribute('width','20');s.setAttribute('height','20');s.setAttribute('x','0');s.setAttribute('y','0');}
+            movePlayerTo(n,0);}catch(e){c.innerHTML=`<circle cx="0" cy="0" r="8" fill="red"/>`;}
+        }
+        function movePlayerTo(n,idx) {
+            const c=document.getElementById('p'+n), pos=spaceCoordinates[idx], off=PLAYER_OFFSETS[n];
+            if(pos&&c) c.setAttribute('transform', `translate(${pos.x+off.x},${pos.y+off.y})`);
+        }
+
+        const diceLayer = document.getElementById('diceLayer');
+        function createDieHTML() { return `<div class="die-skew"><div class="die"><div class="face face-1"><div class="pip"></div></div><div class="face face-2"><div class="pip"></div><div class="pip"></div></div><div class="face face-3"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div><div class="face face-4"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div><div class="face face-5"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div><div class="face face-6"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div></div></div>`; }
+        function calculateLandingPositions() {
+            const p1 = { x: 50 + Math.random() * 20, y: 35 + Math.random() * 15 };
+            const p2 = { x: p1.x + (Math.random() * 10 - 5), y: p1.y + 20 + (Math.random() * 5) };
+            return [p1, p2];
+        }
+        function rollDice(numbers) {
+            diceLayer.innerHTML = "";
+            setTimeout(() => {
+                const w1 = document.createElement('div'); w1.className = 'die-wrapper'; w1.innerHTML = createDieHTML();
+                const w2 = document.createElement('div'); w2.className = 'die-wrapper'; w2.innerHTML = createDieHTML();
+                diceLayer.appendChild(w1); diceLayer.appendChild(w2);
+                const coords = calculateLandingPositions();
+                w1.style.setProperty('--end-x', coords[0].x + "%"); w1.style.setProperty('--end-y', coords[0].y + "%");
+                w2.style.setProperty('--end-x', coords[1].x + "%"); w2.style.setProperty('--end-y', coords[1].y + "%");
+                w1.style.animation = "rollAcross 1.5s ease-out forwards, bounce 0.75s ease-in-out 2 forwards";
+                w2.style.animation = "rollAcross 1.5s ease-out forwards, bounce 0.75s ease-in-out 2 forwards";
+                w2.style.animationDelay = "0.3s";
+                const skew1 = w1.querySelector('.die-skew'); const skew2 = w2.querySelector('.die-skew');
+                skew1.style.transform = `rotateZ(${Math.random() * 360}deg)`; skew2.style.transform = `rotateZ(${Math.random() * 360}deg)`;
+                const die1 = w1.querySelector('.die'); const die2 = w2.querySelector('.die');
+                setTimeout(() => animateDie(die1, numbers[0]), 100);
+                setTimeout(() => animateDie(die2, numbers[1]), 100);
+            }, 50);
+        }
+        function animateDie(dieElement, targetNum) {
+            let xRot = 0, yRot = 0;
+            switch(targetNum) {
+                case 1: xRot = 0; yRot = 0; break; case 2: xRot = 0; yRot = -90; break;
+                case 3: xRot = 0; yRot = -180; break; case 4: xRot = 0; yRot = 90; break;
+                case 5: xRot = -90; yRot = 0; break; case 6: xRot = 90; yRot = 0; break;
+            }
+            const extraX = 720 + (Math.floor(Math.random() * 3) * 360);
+            const extraY = 720 + (Math.floor(Math.random() * 3) * 360);
+            requestAnimationFrame(() => { dieElement.style.transform = `rotateX(${xRot + extraX}deg) rotateY(${yRot + extraY}deg)`; });
+        }
+
+        const cardOverlay = document.getElementById('cardOverlay');
+        const cardContainer = document.getElementById('cardContainer');
+        async function showCard(filename) {
+            try {
+                cardContainer.innerHTML = "";
+                const response = await fetch(filename);
+                if (!response.ok) throw new Error("Card not found");
+                cardContainer.innerHTML = await response.text();
+                cardOverlay.classList.add('active');
+            } catch(e) { console.error(e); }
+        }
+        function hideCard() { cardOverlay.classList.remove('active'); }
+        document.addEventListener('keydown', (e) => { if (e.key === "Escape") hideCard(); });
+
+        const visualsLayer = document.getElementById('visualsLayer');
+        async function drawBuildings(spaceIndex, type, count) {
+            const groupId = `buildings-space-${spaceIndex}`;
+            let spaceGroup = document.getElementById(groupId);
+            if (spaceGroup) { spaceGroup.innerHTML = ""; } 
+            else { spaceGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); spaceGroup.setAttribute("id", groupId); visualsLayer.appendChild(spaceGroup); }
+            const filename = type === 'hotel' ? 'hotel.svg' : 'house.svg';
+            let svgContent = "";
+            try { const res = await fetch(filename); if(!res.ok) throw new Error(); svgContent = await res.text(); } 
+            catch(e) { svgContent = `<rect width="100" height="100" fill="${type==='hotel'?'red':'green'}"/>`; }
+            const center = spaceCoordinates[spaceIndex]; if (!center) return;
+
+            // Hacked house/hotel geometry to align with board artwork
+            const size = 9; 
+            let startX = center.x;
+            let startY = center.y;
+            let offsetX = 0;
+            let offsetY = 0;
+            let rotation = 0;
+
+            if (spaceIndex > 0 && spaceIndex < 10) {
+                // Bottom
+                startY = center.y - 2; 
+                offsetX = 5; 
+                startX = 10*7/8 + center.x + (2.5 - (count-1) * offsetX)/2; // Center the group
+            } 
+            else if (spaceIndex > 10 && spaceIndex < 20) {
+                // Left
+                startX = center.x + 22;
+                offsetY = 5;
+                startY = 10*7/8 + center.y + (2.5 - (count-1) * offsetY)/2;
+                rotation = 90;
+            }
+            else if (spaceIndex > 20 && spaceIndex < 30) {
+                // Top
+                startY = center.y + 22;
+                offsetX = 5;
+                startX = 10*7/8 + center.x + (2.5 - (count-1) * offsetX)/2;
+                rotation = 180;
+            }
+            else if (spaceIndex > 30) {
+                // Right
+                startX = center.x - 2;
+                offsetY = 5;
+                startY = 10*7/8 + center.y + (2.5 - (count-1) * offsetY)/2;
+                rotation = -90;
+            }
+
+            for(let i=0; i<count; i++) {
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.innerHTML = svgContent;
+                const bx = startX + (i * offsetX); const by = startY + (i * offsetY);
+                const wrapper = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                const innerSvg = g.querySelector('svg');
+                if(innerSvg) { innerSvg.setAttribute('width', size); innerSvg.setAttribute('height', size); innerSvg.setAttribute('x', -size/2); innerSvg.setAttribute('y', -size/2); }
+                wrapper.appendChild(g); wrapper.setAttribute('transform', `translate(${bx}, ${by}) rotate(${rotation})`);
+                spaceGroup.appendChild(wrapper);
+            }
+        }
+
+        const contextLayer = document.getElementById('contextLayer');
+        async function loadContext(filename) {
+            try {
+                const response = await fetch(filename);
+                if (!response.ok) throw new Error("Context file not found");
+                contextLayer.innerHTML = await response.text();
+            } catch(e) { console.error(e); }
+        }
+
+        // CONTROLS
+        let currentStepIndex = -1;
+        const els = { story:document.getElementById('storyText'), note:document.getElementById('actionNote'), count:document.getElementById('stepCounter') };
+        
+        function advanceStep() { if (currentStepIndex < script.length - 1) { currentStepIndex++; updateUI(currentStepIndex); } }
+        function goBackStep() { if (currentStepIndex > -1) { currentStepIndex--; if(currentStepIndex===-1){ hideCard(); els.story.textContent="Ready..."; } else { updateUI(currentStepIndex); } } }
+        document.addEventListener('keydown', (e) => { if (e.code === "Space") { e.preventDefault(); advanceStep(); } else if (e.code === "ArrowLeft") { goBackStep(); } });
+
+        function updateUI(idx) {
+            const step = script[idx];
+            els.story.textContent = step.text;
+            els.note.textContent = step.action || "";
+            els.count.textContent = idx + 1;
+            if (step.player && step.space!==undefined) movePlayerTo(step.player, step.space);
+            if (step.roll) rollDice(step.roll);
+            if (step.structure) drawBuildings(step.structure.space, step.structure.type, step.structure.count);
+            if (step.card) showCard(step.card); else hideCard();
+            if (step.context) loadContext(step.context);
+        }
+
+        initApp();
+    </script>
+</body>
+</html>

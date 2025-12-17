@@ -1,0 +1,49 @@
+# We are running the steps from this script...
+
+- text: This is a demo script for testing.
+  action: Loading intro slide
+  context: intro_slide.svg
+
+- text: Player 1 rolls a three and a four.
+  action: Rolling dice
+  roll: [4, 3]
+
+- text: Player 1 moves to space 7 (Chance).
+  action: Moving game piece
+  player: 1
+  space: 7
+
+- text: Player 1 landed on Chance!
+  action: Showing card
+  card: chance_card.svg
+
+- text: Player 1 move to space 10 (Jail).
+  action: Moving game piece
+  player: 1
+  space: 10
+
+- text: Player 2 rolls a five and a one.
+  action: Rolling dice
+  roll: [5, 1]
+
+- text: Player 2 moves to space 6 (Oriental Avenue).
+  action: Moving game piece
+  player: 2
+  space: 6 
+
+- text: Let's buy three houses for Oriental Avenue!
+  action: Building houses
+  structure:
+    space: 6
+    type: house
+    count: 3
+
+- text: Now let's upgrade Oriental Avenue to a Hotel!
+  action: Building a hotel
+  structure:
+    space: 6
+    type: hotel
+    count: 1
+
+- text: End of demo script.
+  action: Done
