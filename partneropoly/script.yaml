@@ -45,5 +45,36 @@
     type: hotel
     count: 1
 
+- text: Let try putting a blueprint on Oriental Avenue
+  action: Showing a blueprint on space 6
+  blueprint:
+    space: 6
+    file: blueprint4.svg
+
+- text: Let try a blueprint on State Ave
+  action: Showing a blueprint on space 13
+  blueprint:
+    space: 13
+    file: blueprint3.svg
+
+- text: Let try a blueprint on Kentucky Avenue
+  action: Showing a blueprint on space 21
+  blueprint:
+    space: 21
+    file: blueprint2.svg
+
+- text: Let try a blueprint on Boardwalk
+  action: Showing a blueprint on space 39
+  blueprint:
+    space: 39
+    file: blueprint1.svg
+
+- text: Can we remove a blueprint?
+  action: Building zero houses on Boardwalk
+  structure:
+    space: 39
+    type: house
+    count: 0
+
 - text: End of demo script.
   action: Done
