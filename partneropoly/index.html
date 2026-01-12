@@ -261,6 +261,64 @@
                 spaceGroup.appendChild(wrapper);
             }
         }
+        async function drawBlueprint(spaceIndex, filename) {
+            const count = 1;
+            const groupId = `buildings-space-${spaceIndex}`;
+            let spaceGroup = document.getElementById(groupId);
+            if (spaceGroup) { spaceGroup.innerHTML = ""; }
+            else { spaceGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); spaceGroup.setAttribute("id", groupId); visualsLayer.appendChild(spaceGroup); }
+            // const filename = type === 'hotel' ? 'hotel.svg' : 'house.svg';
+            let svgContent = "";
+            try { const res = await fetch(filename); if(!res.ok) throw new Error(); svgContent = await res.text(); }
+            catch(e) { svgContent = `<rect width="200" height="200" fill="yellow"/>`; }
+            const center = spaceCoordinates[spaceIndex]; if (!center) return;
+
+            // Hacked house/hotel geometry to align with board artwork
+            const size = 22;
+            let startX = center.x;
+            let startY = center.y;
+            let offsetX = 0;
+            let offsetY = 0;
+            let rotation = 0;
+
+            if (spaceIndex > 0 && spaceIndex < 10) {
+                // Bottom
+                startY = center.y - 12;
+                offsetX = 5;
+                startX = 10*7/8 + center.x + (2.5 - (count-1) * offsetX)/2; // Center the group
+            }
+            else if (spaceIndex > 10 && spaceIndex < 20) {
+                // Left
+                startX = center.x + 32;
+                offsetY = 5;
+                startY = 10*7/8 + center.y + (2.5 - (count-1) * offsetY)/2;
+                rotation = 90;
+            }
+            else if (spaceIndex > 20 && spaceIndex < 30) {
+                // Top
+                startY = center.y + 32;
+                offsetX = 5;
+                startX = 10*7/8 + center.x + (2.5 - (count-1) * offsetX)/2;
+                rotation = 180;
+            }
+            else if (spaceIndex > 30) {
+                // Right
+                startX = center.x - 12;
+                offsetY = 5;
+                startY = 10*7/8 + center.y + (2.5 - (count-1) * offsetY)/2;
+                rotation = -90;
+            }
+
+            for(let i=0; i<count; i++) {
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.innerHTML = svgContent;
+                const bx = startX + (i * offsetX); const by = startY + (i * offsetY);
+                const wrapper = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                const innerSvg = g.querySelector('svg');
+                if(innerSvg) { innerSvg.setAttribute('width', size); innerSvg.setAttribute('height', size); innerSvg.setAttribute('x', -size/2); innerSvg.setAttribute('y', -size/2); }
+                wrapper.appendChild(g); wrapper.setAttribute('transform', `translate(${bx}, ${by}) rotate(${rotation})`);
+                spaceGroup.appendChild(wrapper);
+            }
+        }
 
         const contextLayer = document.getElementById('contextLayer');
         async function loadContext(filename) {
@@ -287,6 +345,7 @@
             if (step.player && step.space!==undefined) movePlayerTo(step.player, step.space);
             if (step.roll) rollDice(step.roll);
             if (step.structure) drawBuildings(step.structure.space, step.structure.type, step.structure.count);
+            if (step.blueprint) drawBlueprint(step.blueprint.space, step.blueprint.file);
             if (step.card) showCard(step.card); else hideCard();
             if (step.context) loadContext(step.context);
         }
