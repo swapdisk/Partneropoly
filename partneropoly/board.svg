@@ -9,7 +9,7 @@
    id="svg1"
    xml:space="preserve"
    inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
-   sodipodi:docname="board-big-text.svg"
+   sodipodi:docname="board.svg"
    inkscape:export-filename="monopoly board.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
@@ -27,9 +27,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="1.2385441"
-     inkscape:cx="1261.9656"
-     inkscape:cy="1278.5173"
+     inkscape:zoom="0.61927205"
+     inkscape:cx="959.99812"
+     inkscape:cy="959.99812"
      inkscape:window-width="2560"
      inkscape:window-height="1403"
      inkscape:window-x="0"
@@ -1060,18 +1060,18 @@
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:798;font-stretch:normal;font-size:3.02676px;line-height:1.2;font-family:'Red Hat Display';-inkscape-font-specification:'Red Hat Display weight=798';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.714983;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;paint-order:markers stroke fill"
          x="140.95476"
-         y="215.15225"
+         y="215.7618"
          id="text112"
-         transform="scale(0.99998589,1.0000141)"><tspan
+         transform="scale(0.9999859,1.0000141)"><tspan
            sodipodi:role="line"
            style="font-style:normal;font-variant:normal;font-weight:798;font-stretch:normal;font-size:3.02676px;line-height:1.2;font-family:'Red Hat Display';-inkscape-font-specification:'Red Hat Display weight=798';stroke-width:0.714983"
            x="140.95476"
-           y="215.15225"
+           y="215.7618"
            id="tspan112">Tech Debt</tspan><tspan
            sodipodi:role="line"
            style="font-style:normal;font-variant:normal;font-weight:798;font-stretch:normal;font-size:3.02676px;line-height:1.2;font-family:'Red Hat Display';-inkscape-font-specification:'Red Hat Display weight=798';stroke-width:0.714983"
            x="140.95476"
-           y="218.78436"
+           y="219.39391"
            id="tspan113">TAX</tspan></text><text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:798;font-stretch:normal;font-size:2.35415px;line-height:1;font-family:'Red Hat Display';-inkscape-font-specification:'Red Hat Display weight=798';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.714983;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;paint-order:markers stroke fill"
@@ -1473,7 +1473,7 @@
            style="font-style:normal;font-variant:normal;font-weight:798;font-stretch:normal;font-size:3px;line-height:1;font-family:'Red Hat Display';-inkscape-font-specification:'Red Hat Display weight=798';stroke-width:0.714983"
            x="61.241325"
            y="-21.030561"
-           id="tspan196">TCS</tspan><tspan
+           id="tspan196">EY</tspan><tspan
            sodipodi:role="line"
            style="font-style:normal;font-variant:normal;font-weight:798;font-stretch:normal;font-size:3px;line-height:1;font-family:'Red Hat Display';-inkscape-font-specification:'Red Hat Display weight=798';stroke-width:0.714983"
            x="61.241325"
