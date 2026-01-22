@@ -39,7 +39,7 @@
         /* RIGHT PANE */
         .right-pane { flex: 1; background-color: #fdfdfd; border-left: 1px solid #ddd; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #contextLayer { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-        #contextLayer svg { width: 95%; height: 95%; max-width: 100%; max-height: 100%; }
+        #contextLayer svg { width: 100%; height: 100%; max-width: 100%; max-height: 100%; }
         .script-display { position: absolute; bottom: 20px; left: 20px; right: 20px; background: rgba(255, 255, 255, 0.95); border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 50; min-height: 80px; }
         .script-text { font-size: 1.2em; color: #222; margin-bottom: 5px; }
         .script-note { font-size: 0.9em; color: #666; font-style: italic; display: flex; justify-content: space-between;}
@@ -66,7 +66,7 @@
             <div id="contextLayer">
                 <p style="color:#ccc; font-style:italic;">(Waiting for context...)</p>
             </div>
-            <div class="script-display">
+            <div id="scriptBox" class="script-display">
                 <div id="storyText" class="script-text">Loading Script...</div>
                 <div class="script-note">
                     <span id="actionNote">Please wait</span>
@@ -202,6 +202,21 @@
         }
         function hideCard() { cardOverlay.classList.remove('active'); }
         document.addEventListener('keydown', (e) => { if (e.key === "Escape") hideCard(); });
+
+        // Toggle story text box
+        const storyDiv = document.getElementById('scriptBox');
+        function toggleStory() {
+          // Check the current display style
+          if (storyDiv.style.display === 'none') {
+            // If hidden, show it
+            storyDiv.style.display = 'block';
+          } else {
+            // If visible, hide it
+            storyDiv.style.display = 'none';
+          }
+        }
+        document.addEventListener('keydown', (e) => { if (e.key.toLowerCase() === "x") toggleStory(); });
+
 
         const visualsLayer = document.getElementById('visualsLayer');
         async function drawBuildings(spaceIndex, type, count) {
