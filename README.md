@@ -93,6 +93,16 @@ You can place buildings on specific spaces. You must specify the space, the type
     count: 1
 ```
 
+In addition to building houses and hotels, you can simalarly display any drawing you like on a space using a blueprint command like this.
+
+```yaml
+- text: Let's try putting a blueprint on Oriental Avenue
+  action: Showing a drawing file on space 6
+  blueprint:
+    space: 6
+    file: blueprint4.svg
+```
+
 ### 6. Loading content in the right pane
 
 The right-hand panel is your "Context Stage" area. You can use it to display charts, graphs, or images that support your narrative. The image will persist until you replace it with a new context command.

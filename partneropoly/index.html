@@ -37,10 +37,10 @@
         .card-content svg { width: 100%; height: 100%; }
 
         /* RIGHT PANE */
-        .right-pane { flex: 1; background-color: #fdfdfd; border-left: 1px solid #ddd; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .right-pane { flex: 1; background-color: #cae8e0; border-left: 1px solid #ddd; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #contextLayer { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-        #contextLayer svg { width: 95%; height: 95%; max-width: 100%; max-height: 100%; }
-        .script-display { position: absolute; bottom: 20px; left: 20px; right: 20px; background: rgba(255, 255, 255, 0.95); border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 50; min-height: 80px; }
+        #contextLayer svg { width: 100%; height: 100%; max-width: 100%; max-height: 100%; }
+        .script-display { position: absolute; bottom: 20px; left: 20px; right: 20px; background: rgba(255, 255, 255, 0.95); border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 50; min-height: 80px; display: none }
         .script-text { font-size: 1.2em; color: #222; margin-bottom: 5px; }
         .script-note { font-size: 0.9em; color: #666; font-style: italic; display: flex; justify-content: space-between;}
         .controls-hint { margin-top: 20px; padding: 15px; background-color: #f0f0f0; color: #555; text-align: center; border-radius: 5px; border: 1px dashed #ccc; font-size: 0.9em; display: none; /* Hidden by default now */ }
@@ -66,7 +66,7 @@
             <div id="contextLayer">
                 <p style="color:#ccc; font-style:italic;">(Waiting for context...)</p>
             </div>
-            <div class="script-display">
+            <div id="scriptBox" class="script-display">
                 <div id="storyText" class="script-text">Loading Script...</div>
                 <div class="script-note">
                     <span id="actionNote">Please wait</span>
@@ -159,6 +159,9 @@
             return [p1, p2];
         }
         function rollDice(numbers) {
+            const audio = new Audio("dice-roll.mp3");
+            audio.play();
+
             diceLayer.innerHTML = "";
             setTimeout(() => {
                 const w1 = document.createElement('div'); w1.className = 'die-wrapper'; w1.innerHTML = createDieHTML();
@@ -202,6 +205,21 @@
         }
         function hideCard() { cardOverlay.classList.remove('active'); }
         document.addEventListener('keydown', (e) => { if (e.key === "Escape") hideCard(); });
+
+        // Toggle story text box
+        const storyDiv = document.getElementById('scriptBox');
+        function toggleStory() {
+          // Check the current display style
+          if (storyDiv.style.display === 'none') {
+            // If hidden, show it
+            storyDiv.style.display = 'block';
+          } else {
+            // If visible, hide it
+            storyDiv.style.display = 'none';
+          }
+        }
+        document.addEventListener('keydown', (e) => { if (e.key.toLowerCase() === "x") toggleStory(); });
+
 
         const visualsLayer = document.getElementById('visualsLayer');
         async function drawBuildings(spaceIndex, type, count) {
@@ -261,6 +279,64 @@
                 spaceGroup.appendChild(wrapper);
             }
         }
+        async function drawBlueprint(spaceIndex, filename) {
+            const count = 1;
+            const groupId = `buildings-space-${spaceIndex}`;
+            let spaceGroup = document.getElementById(groupId);
+            if (spaceGroup) { spaceGroup.innerHTML = ""; }
+            else { spaceGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); spaceGroup.setAttribute("id", groupId); visualsLayer.appendChild(spaceGroup); }
+            // const filename = type === 'hotel' ? 'hotel.svg' : 'house.svg';
+            let svgContent = "";
+            try { const res = await fetch(filename); if(!res.ok) throw new Error(); svgContent = await res.text(); }
+            catch(e) { svgContent = `<rect width="200" height="200" fill="yellow"/>`; }
+            const center = spaceCoordinates[spaceIndex]; if (!center) return;
+
+            // Hacked house/hotel geometry to align with board artwork
+            const size = 22;
+            let startX = center.x;
+            let startY = center.y;
+            let offsetX = 0;
+            let offsetY = 0;
+            let rotation = 0;
+
+            if (spaceIndex > 0 && spaceIndex < 10) {
+                // Bottom
+                startY = center.y - 12;
+                offsetX = 5;
+                startX = 10*7/8 + center.x + (2.5 - (count-1) * offsetX)/2; // Center the group
+            }
+            else if (spaceIndex > 10 && spaceIndex < 20) {
+                // Left
+                startX = center.x + 32;
+                offsetY = 5;
+                startY = 10*7/8 + center.y + (2.5 - (count-1) * offsetY)/2;
+                rotation = 90;
+            }
+            else if (spaceIndex > 20 && spaceIndex < 30) {
+                // Top
+                startY = center.y + 32;
+                offsetX = 5;
+                startX = 10*7/8 + center.x + (2.5 - (count-1) * offsetX)/2;
+                rotation = 180;
+            }
+            else if (spaceIndex > 30) {
+                // Right
+                startX = center.x - 12;
+                offsetY = 5;
+                startY = 10*7/8 + center.y + (2.5 - (count-1) * offsetY)/2;
+                rotation = -90;
+            }
+
+            for(let i=0; i<count; i++) {
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.innerHTML = svgContent;
+                const bx = startX + (i * offsetX); const by = startY + (i * offsetY);
+                const wrapper = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                const innerSvg = g.querySelector('svg');
+                if(innerSvg) { innerSvg.setAttribute('width', size); innerSvg.setAttribute('height', size); innerSvg.setAttribute('x', -size/2); innerSvg.setAttribute('y', -size/2); }
+                wrapper.appendChild(g); wrapper.setAttribute('transform', `translate(${bx}, ${by}) rotate(${rotation})`);
+                spaceGroup.appendChild(wrapper);
+            }
+        }
 
         const contextLayer = document.getElementById('contextLayer');
         async function loadContext(filename) {
@@ -287,6 +363,7 @@
             if (step.player && step.space!==undefined) movePlayerTo(step.player, step.space);
             if (step.roll) rollDice(step.roll);
             if (step.structure) drawBuildings(step.structure.space, step.structure.type, step.structure.count);
+            if (step.blueprint) drawBlueprint(step.blueprint.space, step.blueprint.file);
             if (step.card) showCard(step.card); else hideCard();
             if (step.context) loadContext(step.context);
         }
