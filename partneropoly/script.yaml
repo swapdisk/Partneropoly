@@ -1,80 +1,455 @@
-# We are running the steps from this script...
-
-- text: This is a demo script for testing.
-  action: Loading intro slide
-  context: intro_slide.svg
-
-- text: Player 1 rolls a three and a four.
+- text: Display intro slide
+  action: Showing q00.svg
+  context: q00.svg
+- text: Player 1 rolls 3,2
   action: Rolling dice
-  roll: [4, 3]
-
-- text: Player 1 moves to space 7 (Chance).
+  roll: [3,2]
+- text: Display space name
+  action: Showing q1.svg
+  context: q1.svg
+- text: Player 1 moves to Azure Railroad 
   action: Moving game piece
   player: 1
+  space: 5
+- text: Display question
+  action: Showing q1a.svg
+  context: q1a.svg
+- text: Player 1 gets a blueprint on Azure Railroad 
+  action: Adding blueprint
+  blueprint:
+    space: 5
+    file: blueprint1.svg
+- text: Player 2 rolls 2,4
+  action: Rolling dice
+  roll: [2,4]
+- text: Display space name
+  action: Showing q2.svg
+  context: q2.svg
+- text: Player 2 moves to Oracle Avenue
+  action: Moving game piece
+  player: 2
+  space: 6
+- text: Display question
+  action: Showing q2a.svg
+  context: q2a.svg
+- text: Player 2 gets a blueprint on Oracle Avenue
+  action: Adding blueprint
+  blueprint:
+    space: 6
+    file: blueprint2.svg
+- text: Player 3 rolls 4,6
+  action: Rolling dice
+  roll: [4,6]
+- text: Display space name
+  action: Showing q3.svg
+  context: q3.svg
+- text: Player 3 moves to Just Visiting 
+  action: Moving game piece
+  player: 3
+  space: 10
+- text: Display question
+  action: Showing q3a.svg
+  context: q3a.svg
+- text: Player 4 rolls 5,3
+  action: Rolling dice
+  roll: [5,3]
+- text: Display space name
+  action: Showing q4.svg
+  context: q4.svg
+- text: Player 4 moves to VDI Avenue
+  action: Moving game piece
+  player: 4
+  space: 8
+- text: Display question
+  action: Showing q4a.svg
+  context: q4a.svg
+- text: Player 4 gets a blueprint on VDI Avenue
+  action: Adding blueprint
+  blueprint:
+    space: 8
+    file: blueprint4.svg
+- text: Player 1 rolls 2,5
+  action: Rolling dice
+  roll: [2,5]
+- text: Display space name
+  action: Showing q5.svg
+  context: q5.svg
+- text: Player 1 moves to Electric Company
+  action: Moving game piece
+  player: 1
+  space: 12
+- text: Display question
+  action: Showing q5a.svg
+  context: q5a.svg
+- text: Player 1 gets a blueprint on Electric Company
+  action: Adding blueprint
+  blueprint:
+    space: 12
+    file: blueprint1.svg
+- text: Player 2 rolls 3,4
+  action: Rolling dice
+  roll: [3,4]
+- text: Display space name
+  action: Showing q6.svg
+  context: q6.svg
+- text: Player 2 moves to Palo Alto Avenue
+  action: Moving game piece
+  player: 2
+  space: 13
+- text: Display question
+  action: Showing q6a.svg
+  context: q6a.svg
+- text: Player 2 gets a blueprint on Palo Alto Avenue
+  action: Adding blueprint
+  blueprint:
+    space: 13
+    file: blueprint2.svg
+- text: Player 3 rolls 1,5
+  action: Rolling dice
+  roll: [1,5]
+- text: Display space name
+  action: Showing q7.svg
+  context: q7.svg
+- text: Player 3 moves to Cisco Avenue
+  action: Moving game piece
+  player: 3
+  space: 16
+- text: Display question
+  action: Showing q7a.svg
+  context: q7a.svg
+- text: Player 3 gets a blueprint on Cisco Avenue
+  action: Adding blueprint
+  blueprint:
+    space: 16
+    file: blueprint3.svg
+- text: Player 4 rolls 3,3
+  action: Rolling dice
+  roll: [3,3]
+- text: Display space name
+  action: Showing q8.svg
+  context: q8.svg
+- text: Player 4 moves to Accenture Avenue
+  action: Moving game piece
+  player: 4
+  space: 14
+- text: Display question
+  action: Showing q8a.svg
+  context: q8a.svg
+- text: Player 4 gets a blueprint on Accenture Avenue
+  action: Adding blueprint
+  blueprint:
+    space: 14
+    file: blueprint4.svg
+- text: Player 4 rolls 3,1
+  action: Rolling dice
+  roll: [3,1]
+- text: Display space name
+  action: Showing q9.svg
+  context: q9.svg
+- text: Player 4 moves to EY Avenue
+  action: Moving game piece
+  player: 4
+  space: 18
+- text: Display question
+  action: Showing q9a.svg
+  context: q9a.svg
+- text: Player 4 gets a blueprint on EY Avenue
+  action: Adding blueprint
+  blueprint:
+    space: 18
+    file: blueprint4.svg
+- text: Player 1 rolls 1,5
+  action: Rolling dice
+  roll: [1,5]
+- text: Display space name
+  action: Showing q10.svg
+  context: q10.svg
+- text: Player 1 moves to EY Avenue
+  action: Moving game piece
+  player: 1
+  space: 18
+- text: Display question
+  action: Showing q10a.svg
+  context: q10a.svg
+- text: Player 1 gets a blueprint on EY Avenue
+  action: Adding blueprint
+  blueprint:
+    space: 18
+    file: blueprint1.svg
+- text: Player 2 rolls 4,3
+  action: Rolling dice
+  roll: [4,3]
+- text: Display space name
+  action: Showing q11.svg
+  context: q11.svg
+- text: Player 2 moves to Free Parking 
+  action: Moving game piece
+  player: 2
+  space: 20
+- text: Display question
+  action: Showing q11a.svg
+  context: q11a.svg
+- text: Player 3 rolls 1,3
+  action: Rolling dice
+  roll: [1,3]
+- text: Display space name
+  action: Showing q12.svg
+  context: q12.svg
+- text: Player 3 moves to Free Parking 
+  action: Moving game piece
+  player: 3
+  space: 20
+- text: Display question
+  action: Showing q12a.svg
+  context: q12a.svg
+- text: Player 4 rolls 5,3
+  action: Rolling dice
+  roll: [5,3]
+- text: Display space name
+  action: Showing q13.svg
+  context: q13.svg
+- text: Player 4 moves to Ahead Avenue 
+  action: Moving game piece
+  player: 4
+  space: 26
+- text: Display question
+  action: Showing q13a.svg
+  context: q13a.svg
+- text: Player 4 gets a blueprint on Ahead Avenue 
+  action: Adding blueprint
+  blueprint:
+    space: 26
+    file: blueprint4.svg
+- text: Player 1 rolls 2,5
+  action: Rolling dice
+  roll: [2,5]
+- text: Display space name
+  action: Showing q14.svg
+  context: q14.svg
+- text: Player 1 moves to Oracle Railroad 
+  action: Moving game piece
+  player: 1
+  space: 25
+- text: Display question
+  action: Showing q14a.svg
+  context: q14a.svg
+- text: Player 1 gets a blueprint on Oracle Railroad 
+  action: Adding blueprint
+  blueprint:
+    space: 25
+    file: blueprint1.svg
+- text: Player 2 rolls 3,5
+  action: Rolling dice
+  roll: [3,5]
+- text: Display space name
+  action: Showing q15.svg
+  context: q15.svg
+- text: Player 2 moves to Crossvale Avenue
+  action: Moving game piece
+  player: 2
+  space: 28
+- text: Display question
+  action: Showing q15a.svg
+  context: q15a.svg
+- text: Player 2 gets a blueprint on Crossvale Avenue
+  action: Adding blueprint
+  blueprint:
+    space: 28
+    file: blueprint2.svg
+- text: Player 3 rolls 5,6
+  action: Rolling dice
+  roll: [5,6]
+- text: Display space name
+  action: Showing q16.svg
+  context: q16.svg
+- text: Player 3 moves to Hugging Face Avenue
+  action: Moving game piece
+  player: 3
+  space: 31
+- text: Display question
+  action: Showing q16a.svg
+  context: q16a.svg
+- text: Player 3 gets a blueprint on Hugging Face Avenue
+  action: Adding blueprint
+  blueprint:
+    space: 31
+    file: blueprint3.svg
+- text: Player 4 rolls 4,6
+  action: Rolling dice
+  roll: [4,6]
+- text: Display space name
+  action: Showing q17.svg
+  context: q17.svg
+- text: Player 4 moves to Chance 
+  action: Moving game piece
+  player: 4
+  space: 36
+- text: Display question
+  action: Showing q17a.svg
+  context: q17a.svg
+- text: Player 1 rolls 6,3
+  action: Rolling dice
+  roll: [6,3]
+- text: Display space name
+  action: Showing q18.svg
+  context: q18.svg
+- text: Player 1 moves to Dell Avenue
+  action: Moving game piece
+  player: 1
+  space: 34
+- text: Display question
+  action: Showing q18a.svg
+  context: q18a.svg
+- text: Player 1 gets a blueprint on Dell Avenue
+  action: Adding blueprint
+  blueprint:
+    space: 34
+    file: blueprint1.svg
+- text: Player 2 rolls 4,5
+  action: Rolling dice
+  roll: [4,5]
+- text: Display space name
+  action: Showing q19.svg
+  context: q19.svg
+- text: Player 2 moves to WWT Place 
+  action: Moving game piece
+  player: 2
+  space: 37
+- text: Display question
+  action: Showing q19a.svg
+  context: q19a.svg
+- text: Player 2 gets a blueprint on WWT Place 
+  action: Adding blueprint
+  blueprint:
+    space: 37
+    file: blueprint2.svg
+- text: Player 3 rolls 1,6
+  action: Rolling dice
+  roll: [1,6]
+- text: Display space name
+  action: Showing q20.svg
+  context: q20.svg
+- text: Player 3 moves to AI Luxury Tax 
+  action: Moving game piece
+  player: 3
+  space: 38
+- text: Display question
+  action: Showing q20a.svg
+  context: q20a.svg
+- text: Player 4 rolls 6,5
+  action: Rolling dice
+  roll: [6,5]
+- text: Display space name
+  action: Showing q21.svg
+  context: q21.svg
+- text: Player 4 moves to Chance 
+  action: Moving game piece
+  player: 4
   space: 7
-
-- text: Player 1 landed on Chance!
-  action: Showing card
-  card: chance_card.svg
-
-- text: Player 1 move to space 10 (Jail).
+- text: Display question
+  action: Showing q21a.svg
+  context: q21a.svg
+- text: Player 1 rolls 4,4
+  action: Rolling dice
+  roll: [4,4]
+- text: Display space name
+  action: Showing q22.svg
+  context: q22.svg
+- text: Player 1 moves to Community Chest 
+  action: Moving game piece
+  player: 1
+  space: 2
+- text: Display question
+  action: Showing q22a.svg
+  context: q22a.svg
+- text: Player 1 rolls 3,5
+  action: Rolling dice
+  roll: [3,5]
+- text: Display space name
+  action: Showing q23.svg
+  context: q23.svg
+- text: Player 1 moves to Just Visiting 
   action: Moving game piece
   player: 1
   space: 10
-
-- text: Player 2 rolls a five and a one.
+- text: Display question
+  action: Showing q23a.svg
+  context: q23a.svg
+- text: Player 2 rolls 5,5
   action: Rolling dice
-  roll: [5, 1]
-
-- text: Player 2 moves to space 6 (Oriental Avenue).
+  roll: [5,5]
+- text: Display space name
+  action: Showing q24.svg
+  context: q24.svg
+- text: Player 2 moves to Chance 
   action: Moving game piece
   player: 2
-  space: 6 
-
-- text: Let's buy three houses for Oriental Avenue!
-  action: Building houses
-  structure:
-    space: 6
-    type: house
-    count: 3
-
-- text: Now let's upgrade Oriental Avenue to a Hotel!
-  action: Building a hotel
-  structure:
-    space: 6
-    type: hotel
-    count: 1
-
-- text: Let try putting a blueprint on Oriental Avenue
-  action: Showing a blueprint on space 6
+  space: 7
+- text: Display question
+  action: Showing q24a.svg
+  context: q24a.svg
+- text: Player 2 rolls 5,3
+  action: Rolling dice
+  roll: [5,3]
+- text: Display space name
+  action: Showing q25.svg
+  context: q25.svg
+- text: Player 2 moves to Amazon Railroad
+  action: Moving game piece
+  player: 2
+  space: 15
+- text: Display question
+  action: Showing q25a.svg
+  context: q25a.svg
+- text: Player 2 gets a blueprint on Amazon Railroad
+  action: Adding blueprint
   blueprint:
-    space: 6
-    file: blueprint4.svg
-
-- text: Let try a blueprint on State Ave
-  action: Showing a blueprint on space 13
-  blueprint:
-    space: 13
-    file: blueprint3.svg
-
-- text: Let try a blueprint on Kentucky Avenue
-  action: Showing a blueprint on space 21
-  blueprint:
-    space: 21
+    space: 15
     file: blueprint2.svg
-
-- text: Let try a blueprint on Boardwalk
-  action: Showing a blueprint on space 39
+- text: Player 3 rolls 2,4
+  action: Rolling dice
+  roll: [2,4]
+- text: Display space name
+  action: Showing q26.svg
+  context: q26.svg
+- text: Player 3 moves to Tech Debt Tax 
+  action: Moving game piece
+  player: 3
+  space: 4
+- text: Display question
+  action: Showing q26a.svg
+  context: q26a.svg
+- text: Player 4 rolls 1,3
+  action: Rolling dice
+  roll: [1,3]
+- text: Display space name
+  action: Showing q27.svg
+  context: q27.svg
+- text: Player 4 moves to PureStorge Avenue
+  action: Moving game piece
+  player: 4
+  space: 11
+- text: Display question
+  action: Showing q27a.svg
+  context: q27a.svg
+- text: Player 4 gets a blueprint on PureStorge Avenue
+  action: Adding blueprint
   blueprint:
-    space: 39
-    file: blueprint1.svg
-
-- text: Can we remove a blueprint?
-  action: Building zero houses on Boardwalk
-  structure:
-    space: 39
-    type: house
-    count: 0
-
-- text: End of demo script.
-  action: Done
+    space: 11
+    file: blueprint4.svg
+- text: Player 1 rolls 4,3
+  action: Rolling dice
+  roll: [4,3]
+- text: Display space name
+  action: Showing q28.svg
+  context: q28.svg
+- text: Player 1 moves to Community Chest 
+  action: Moving game piece
+  player: 1
+  space: 17
+- text: Display question
+  action: Showing q28a.svg
+  context: q28a.svg
+- text: Display intro slide
+  action: Showing q00.svg
+  context: q00.svg
